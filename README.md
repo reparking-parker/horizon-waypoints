@@ -11,17 +11,22 @@ Named waypoints for [Horizon](https://github.com/horizon-rust/horizon), with sma
 
 ## Without the launcher window
 
-`windows/install-waypoints.bat` does the install and build from the command line: put it next to
-`horizon-launcher.exe`, double-click it once, then start the game as usual (`horizon-launcher.exe play`). Run it again
-to update the mod. The commands it runs:
+`windows/le_horizon.bat` runs Horizon with no launcher window, for slow computers. Put it next to
+`horizon-launcher.exe` (or install the launcher from playhorizon.dev) and double-click it every time. The first run
+signs in, installs Horizon, offers to install this mod and applies fast settings. Each run updates the launcher and
+Horizon, then shows a menu: play, switch Horizon version (it rebuilds the mods on the new one), mods, servers,
+worlds, resource and shader packs, accounts, screenshots, logs and settings.
+
+The commands it uses for this mod:
 
 ```bat
 horizon-launcher.exe mods add-github https://github.com/reparking-parker/horizon-waypoints --trust-native-code
-horizon-launcher.exe native-build --trust-native-code
+horizon-launcher.exe native-build --ignore-pins --trust-native-code
+horizon-launcher.exe mods update-github waypoints --trust-native-code
 ```
 
-After installing a new Horizon version, run `horizon-launcher.exe native-build --update --trust-native-code` to rebuild
-the game on it.
+`--ignore-pins` builds the mod on the Horizon you play rather than the Nightly it was tested on; it needs Nightly
+2026-11-08 or newer.
 
 ## Your old waypoints
 
