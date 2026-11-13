@@ -1,0 +1,45 @@
+# Waypoints (Horizon native mod)
+
+Named waypoints for [Horizon](https://github.com/horizon-rust/horizon), with small markers on screen.
+
+- **B** adds a waypoint where you stand, **U** lists them in chat (change both in Options > Mods > Waypoints).
+- Markers show your waypoints in the dimension you're in, with the name and distance of the one nearest the crosshair.
+- When you die, a **Death** waypoint marks the spot.
+- `/wp help` lists the commands: `add`, `remove`, `rename`, `hide`, `show`, `color`, `list`, `tp`, `group`, `markers`, `death`.
+- Options > Mods > Waypoints > Settings: markers on or off, marker size, which names show, the death waypoint, the
+  group, and a row per waypoint to show or hide it.
+
+## Your old waypoints
+
+This is the native version of the WebAssembly Waypoints mod, which Horizon stopped running on 2026-10-29. It keeps that
+mod's id, so it reads the same files: `horizon-mods/.horizon-mod-data/waypoints/waypoints` and `.../settings` in your
+game folder (on Windows, `%APPDATA%\horizon\horizon-mods\.horizon-mod-data\waypoints\`). If those files are still
+there, your waypoints come back as they were.
+
+## Install
+
+Native mods are Rust code the Horizon launcher compiles into the game on your computer:
+
+1. In the launcher, turn on Settings > Game > Native mods.
+2. Install this mod from its GitHub link or folder, then press **Build**. The first build downloads Rust (about 450 MB)
+   and compiles the game, which takes 10 to 30 minutes. Later builds are faster.
+3. Play the **Native mods** instance the build makes, and turn Waypoints on in Options > Mods.
+
+## Made on the hook points
+
+It only uses Horizon's native hook points (`compatibility.json`: `hooks`), so it builds on newer Nightlies without a
+new release. Tested on Nightly `2026-11-08-fdc87ae`.
+
+| Hook | What the mod does there |
+|---|---|
+| `native_hud` | draws the markers and names |
+| `native_key` | B and U |
+| `native_command`, `native_commands` | `/wp` |
+| `native_mods`, `native_settings`, `native_settings_click` | the Options > Mods row and settings page |
+| `native_client_tick_post` | the death waypoint, when the death screen comes up |
+| `native_camera_pose`, `native_compute_fov` | the frame's camera and field of view, to place the markers |
+
+`cargo test` runs the mod's own tests (`mixins/waypoints/runtime.rs`).
+
+Not carried over from the WebAssembly mod: the U menu screen (U lists in chat instead; edit with `/wp` and the settings
+page), and the field of view, zoom and F5 settings (the native mod reads the real camera).
