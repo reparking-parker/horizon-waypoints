@@ -17,7 +17,7 @@ pub const SETTINGS_FILE: &str = "settings";
 pub const ADD_KEY: [&str; 3] = ["add", "Add a waypoint here", "key.keyboard.b"];
 pub const LIST_KEY: [&str; 3] = ["menu", "List the waypoints in chat", "key.keyboard.u"];
 
-/// Vanilla's chat colours, by the index Xaero's files use too.
+/// Vanilla's chat colours.
 pub const COLORS: [(&str, u32); 16] = [
     ("black", 0x000000),
     ("dark_blue", 0x0000AA),

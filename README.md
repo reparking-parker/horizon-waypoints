@@ -21,7 +21,7 @@ there, your waypoints come back as they were.
 Native mods are Rust code the Horizon launcher compiles into the game on your computer:
 
 1. In the launcher, turn on Settings > Game > Native mods.
-2. Install this mod from its GitHub link or folder, then press **Build**. The first build downloads Rust (about 450 MB)
+2. On the launcher's Mods page, choose **Add from GitHub** and paste this repository's link, then press **Build**. The first build downloads Rust (about 450 MB)
    and compiles the game, which takes 10 to 30 minutes. Later builds are faster.
 3. Play the **Native mods** instance the build makes, and turn Waypoints on in Options > Mods.
 
@@ -40,6 +40,8 @@ new release. Tested on Nightly `2026-11-08-fdc87ae`.
 | `native_camera_pose`, `native_compute_fov` | the frame's camera and field of view, to place the markers |
 
 `cargo test` runs the mod's own tests (`mixins/waypoints/runtime.rs`).
+
+Tested on Linux: old waypoint files loading, `/wp add` and `list`, markers on screen and the death waypoint.
 
 Not carried over from the WebAssembly mod: the U menu screen (U lists in chat instead; edit with `/wp` and the settings
 page), and the field of view, zoom and F5 settings (the native mod reads the real camera).
