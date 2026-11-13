@@ -9,6 +9,20 @@ Named waypoints for [Horizon](https://github.com/horizon-rust/horizon), with sma
 - Options > Mods > Waypoints > Settings: markers on or off, marker size, which names show, the death waypoint, the
   group, and a row per waypoint to show or hide it.
 
+## Without the launcher window
+
+`windows/install-waypoints.bat` does the install and build from the command line: put it next to
+`horizon-launcher.exe`, double-click it once, then start the game as usual (`horizon-launcher.exe play`). Run it again
+to update the mod. The commands it runs:
+
+```bat
+horizon-launcher.exe mods add-github https://github.com/reparking-parker/horizon-waypoints --trust-native-code
+horizon-launcher.exe native-build --trust-native-code
+```
+
+After installing a new Horizon version, run `horizon-launcher.exe native-build --update --trust-native-code` to rebuild
+the game on it.
+
 ## Your old waypoints
 
 This is the native version of the WebAssembly Waypoints mod, which Horizon stopped running on 2026-10-29. It keeps that
