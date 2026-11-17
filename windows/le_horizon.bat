@@ -38,6 +38,9 @@ rem be played.
 echo Checking for Horizon and launcher updates...
 "%L%" update || echo Could not check for updates, carrying on.
 
+rem Detect the launcher version and set feature flags for removed commands.
+call :detectversion
+
 rem Old launchers cannot pick a version or build native mods (they say "invalid value").
 call :canpick
 if errorlevel 1 (set "OLDLAUNCHER=1") else (set "OLDLAUNCHER=")
@@ -350,11 +353,27 @@ echo  Accounts
 echo.
 echo    1. Sign in with another Microsoft account
 echo    2. Switch the account that plays
+if defined CANOFFLINE echo    3. Play offline ^(no Microsoft account^)
 echo    B. Back
+if defined CANOFFLINE goto accounts_choice_offline
 choice /c 12B /n /m "Press a key: "
 if errorlevel 3 goto menu
 if errorlevel 2 goto account_select
 "%L%" account sign-in
+pause
+goto accounts
+
+:accounts_choice_offline
+choice /c 123B /n /m "Press a key: "
+if errorlevel 4 goto menu
+if errorlevel 3 goto account_offline
+if errorlevel 2 goto account_select
+"%L%" account sign-in
+pause
+goto accounts
+
+:account_offline
+"%L%" account offline
 pause
 goto accounts
 
@@ -400,9 +419,24 @@ echo  Settings
 echo    1. Apply the fast settings again ^(low graphics for this laptop^)
 echo    2. Show the launcher's settings
 echo    3. Open the game folder
+if defined CANNATIVEPROFILE echo    4. Mods build faster ^(native profile on^)
+if defined CANNATIVEPROFILE echo    5. Best speed ^(native profile off^)
 echo    B. Back
+if defined CANNATIVEPROFILE goto settings_choice_nativeprofile
 choice /c 123B /n /m "Press a key: "
 if errorlevel 4 goto menu
+if errorlevel 3 (explorer "%GAME%" & goto settings)
+if errorlevel 2 ("%L%" settings & pause & goto settings)
+del horizon-optimized.txt 2>nul
+call :optimize
+pause
+goto settings
+
+:settings_choice_nativeprofile
+choice /c 12345B /n /m "Press a key: "
+if errorlevel 6 goto menu
+if errorlevel 5 ("%L%" settings native-profile off & echo Native profile off. & pause & goto settings)
+if errorlevel 4 ("%L%" settings native-profile on & echo Native profile on. & pause & goto settings)
 if errorlevel 3 (explorer "%GAME%" & goto settings)
 if errorlevel 2 ("%L%" settings & pause & goto settings)
 del horizon-optimized.txt 2>nul
@@ -422,6 +456,28 @@ echo The game did not start. Preparing this version and trying once more...
 "%L%" play %VARG% || goto failed
 :played
 call :optimize
+exit /b 0
+
+:detectversion
+rem Parse the launcher version from "horizon-launcher X.Y.Z" and set feature flags.
+rem On failure, assume the newest behavior (safest default: hides removed commands).
+set "LVER=" & set "LVER_MAJOR=" & set "LVER_MINOR=" & set "LVER_PATCH="
+set "CANOFFLINE=" & set "CANNATIVEPROFILE="
+for /f "tokens=2 delims= " %%v in ('"%L%" --version 2^>nul') do set "LVER=%%v"
+if not defined LVER exit /b 1
+for /f "tokens=1-3 delims=." %%a in ("%LVER%") do (
+  set "LVER_MAJOR=%%a"
+  set "LVER_MINOR=%%b"
+  set "LVER_PATCH=%%c"
+)
+if not defined LVER_PATCH exit /b 1
+rem Features removed in 0.2.59: account offline, settings native-profile.
+if %LVER_MAJOR% GEQ 1 exit /b 0
+if %LVER_MINOR% GEQ 3 exit /b 0
+if %LVER_PATCH% LSS 59 (
+  set "CANOFFLINE=1"
+  set "CANNATIVEPROFILE=1"
+)
 exit /b 0
 
 :canpick
