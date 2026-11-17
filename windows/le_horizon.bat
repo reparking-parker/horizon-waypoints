@@ -350,11 +350,9 @@ echo  Accounts
 echo.
 echo    1. Sign in with another Microsoft account
 echo    2. Switch the account that plays
-echo    3. Play offline under a name ^(LAN and offline servers^)
 echo    B. Back
-choice /c 123B /n /m "Press a key: "
-if errorlevel 4 goto menu
-if errorlevel 3 goto offline
+choice /c 12B /n /m "Press a key: "
+if errorlevel 3 goto menu
 if errorlevel 2 goto account_select
 "%L%" account sign-in
 pause
@@ -364,13 +362,6 @@ goto accounts
 set "WHO="
 set /p "WHO=The account's name, as listed: "
 if defined WHO "%L%" account select "%WHO%"
-pause
-goto accounts
-
-:offline
-set "WHO="
-set /p "WHO=The name to play as (3 to 16 letters, digits or _): "
-if defined WHO "%L%" account offline "%WHO%"
 pause
 goto accounts
 
@@ -407,17 +398,13 @@ rem ---------------------------------------------------------------- settings
 echo.
 echo  Settings
 echo    1. Apply the fast settings again ^(low graphics for this laptop^)
-echo    2. Mods build faster to rebuild ^(slower game: dev^)
-echo    3. Mods build for the best game speed ^(default: performance^)
-echo    4. Show the launcher's settings
-echo    5. Open the game folder
+echo    2. Show the launcher's settings
+echo    3. Open the game folder
 echo    B. Back
-choice /c 12345B /n /m "Press a key: "
-if errorlevel 6 goto menu
-if errorlevel 5 (explorer "%GAME%" & goto settings)
-if errorlevel 4 ("%L%" settings & pause & goto settings)
-if errorlevel 3 ("%L%" settings native-profile performance & pause & goto settings)
-if errorlevel 2 ("%L%" settings native-profile dev & pause & goto settings)
+choice /c 123B /n /m "Press a key: "
+if errorlevel 4 goto menu
+if errorlevel 3 (explorer "%GAME%" & goto settings)
+if errorlevel 2 ("%L%" settings & pause & goto settings)
 del horizon-optimized.txt 2>nul
 call :optimize
 pause
